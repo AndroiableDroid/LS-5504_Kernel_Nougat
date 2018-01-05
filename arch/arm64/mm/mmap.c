@@ -47,21 +47,6 @@ static int mmap_is_legacy(void)
 	return sysctl_legacy_va_layout;
 }
 
-static unsigned long mmap_rnd(void)
-{
-	unsigned long rnd = 0;
-
-	if (current->flags & PF_RANDOMIZE) {
-#ifdef CONFIG_COMPAT
-		if (test_thread_flag(TIF_32BIT))
-			rnd = get_random_long() & ((1UL << mmap_rnd_compat_bits) - 1);
-		else
-#endif
-			rnd = get_random_long() & ((1UL << mmap_rnd_bits) - 1);
-	}
-	return rnd << PAGE_SHIFT;
-}
-
 static unsigned long mmap_base(void)
 {
 	unsigned long gap = rlimit(RLIMIT_STACK);
