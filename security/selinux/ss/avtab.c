@@ -530,11 +530,6 @@ int avtab_read_item(struct avtab *a, void *fp, struct policydb *pol,
 				return rc;
 			}
 		}
-		rc = next_entry(&xperms.driver, fp, sizeof(u8));
-		if (rc) {
-			printk(KERN_ERR "SELinux: avtab: truncated entry\n");
-			return rc;
-		}
 		rc = next_entry(buf32, fp, sizeof(u32)*ARRAY_SIZE(xperms.perms.p));
 		if (rc) {
 			printk(KERN_ERR "SELinux: avtab: truncated entry\n");
@@ -635,9 +630,6 @@ int avtab_write_item(struct policydb *p, struct avtab_node *cur, void *fp)
 			if (rc)
 				return rc;
 		}
-		rc = put_entry(&cur->datum.u.xperms->specified, sizeof(u8), 1, fp);
-		if (rc)
-			return rc;
 		rc = put_entry(&cur->datum.u.xperms->driver, sizeof(u8), 1, fp);
 		if (rc)
 			return rc;
