@@ -513,6 +513,7 @@ int avtab_read_item(struct avtab *a, void *fp, struct policydb *pol,
 			printk(KERN_ERR "SELinux: avtab: truncated entry\n");
 			return rc;
 		}
+<<<<<<< HEAD
 		if (avtab_android_m_compat ||
 			    ((xperms.specified != AVTAB_XPERMS_IOCTLFUNCTION) &&
 			    (xperms.specified != AVTAB_XPERMS_IOCTLDRIVER) &&
@@ -529,6 +530,12 @@ int avtab_read_item(struct avtab *a, void *fp, struct policydb *pol,
 				printk(KERN_ERR "SELinux: avtab: truncated entry\n");
 				return rc;
 			}
+=======
+		rc = next_entry(&xperms.driver, fp, sizeof(u8));
+		if (rc) {
+			printk(KERN_ERR "SELinux: avtab: truncated entry\n");
+			return rc;
+>>>>>>> dc46a19f988... selinux: extended permissions for ioctls
 		}
 		rc = next_entry(buf32, fp, sizeof(u32)*ARRAY_SIZE(xperms.perms.p));
 		if (rc) {
@@ -623,7 +630,6 @@ int avtab_write_item(struct policydb *p, struct avtab_node *cur, void *fp)
 	if (rc)
 		return rc;
 
-<<<<<<< HEAD
 	if (cur->key.specified & AVTAB_XPERMS) {
 <<<<<<< HEAD
 		if (avtab_android_m_compat == 0) {
@@ -642,14 +648,6 @@ int avtab_write_item(struct policydb *p, struct avtab_node *cur, void *fp)
 			return rc;
 		for (i = 0; i < ARRAY_SIZE(cur->datum.u.xperms->perms.p); i++)
 			buf32[i] = cpu_to_le32(cur->datum.u.xperms->perms.p[i]);
-=======
-	if (cur->key.specified & AVTAB_OP) {
-		rc = put_entry(&cur->datum.u.ops->type, sizeof(u8), 1, fp);
-		if (rc)
-			return rc;
-		for (i = 0; i < ARRAY_SIZE(cur->datum.u.ops->op.perms); i++)
-			buf32[i] = cpu_to_le32(cur->datum.u.ops->op.perms[i]);
->>>>>>> 0aca7c2d8b3... Revert "Revert "SELinux: ss: Fix policy write for ioctl operations""
 		rc = put_entry(buf32, sizeof(u32),
 				ARRAY_SIZE(cur->datum.u.xperms->perms.p), fp);
 	} else {
